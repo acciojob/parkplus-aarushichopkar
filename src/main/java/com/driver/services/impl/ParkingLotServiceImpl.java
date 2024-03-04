@@ -1,6 +1,7 @@
 package com.driver.services.impl;
 
 import com.driver.model.ParkingLot;
+import com.driver.model.Reservation;
 import com.driver.model.Spot;
 import com.driver.model.SpotType;
 import com.driver.repository.ParkingLotRepository;
@@ -9,6 +10,7 @@ import com.driver.services.ParkingLotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -35,6 +37,7 @@ public class ParkingLotServiceImpl implements ParkingLotService {
         Spot newSpot = new Spot();
         newSpot.setPricePerHour(pricePerHour);
         newSpot.setOccupied(false);
+        newSpot.setReservationList(new ArrayList<>());
         if(numberOfWheels<=2){
             newSpot.setSpotType(SpotType.TWO_WHEELER);
         } else if (numberOfWheels<=4) {
