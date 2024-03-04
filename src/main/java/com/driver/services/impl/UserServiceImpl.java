@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,8 +21,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updatePassword(Integer userId, String password) {
-
-        return null;
+        Optional<User> optionalUser = userRepository4.findById(userId);
+        if(optionalUser.isPresent()){
+            User user = optionalUser.get();
+            user.setPassword(password);
+            return userRepository4.save(user);
+        }else{
+            throw new NullPointerException("Invalid User Id");
+        }
     }
 
     @Override
