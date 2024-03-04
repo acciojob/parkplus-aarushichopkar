@@ -75,11 +75,11 @@ public class ReservationServiceImpl implements ReservationService {
                 return reservationRepository3.save(reservation);
             }
             else {
-                throw new Exception("Cannot Make Reservation");
+                throw new Exception("Cannot make reservation");
             }
 
         }else{
-            throw new Exception("Cannot Make Reservation");
+            throw new NullPointerException();
         }
     }
 }
