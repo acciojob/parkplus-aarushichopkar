@@ -42,13 +42,15 @@ public class ParkingLotServiceImpl implements ParkingLotService {
             newSpot.setSpotType(SpotType.OTHERS);
         }
         Optional<ParkingLot> optionalParkingLot = parkingLotRepository1.findById(parkingLotId);
+
 //        System.out.println("before"+optionalParkingLot.get().getSpotList().toString());
         if(optionalParkingLot.isPresent()) {
-//
-            List<Spot> newSpotList = optionalParkingLot.get().getSpotList();        //get spotlist of the parkinglot
+            ParkingLot parkingLot = optionalParkingLot.get();
+            List<Spot> newSpotList = parkingLot.getSpotList();        //get spotlist of the parkinglot
             newSpotList.add(newSpot);                                               //add newSpot to the list
-            optionalParkingLot.get().setSpotList(newSpotList);                      //set this new list
-            newSpot.setParkingLot(optionalParkingLot.get());
+            parkingLot.setSpotList(newSpotList);                      //set this new list
+            parkingLotRepository1.save(parkingLot);
+            newSpot.setParkingLot(parkingLot);
         }
 
 //        optionalParkingLot.get().getSpotList().stream()
