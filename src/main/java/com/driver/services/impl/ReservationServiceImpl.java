@@ -42,7 +42,7 @@ public class ReservationServiceImpl implements ReservationService {
             //get list of all empty spaces that are same type or more
             List<Spot> spotList = parkingLot.getSpotList();
             List<Spot> unoccupiedSpots = spotList.stream()
-                    .filter(spot -> Boolean.FALSE.equals(spot.getOccupied()))
+                    .filter(spot -> (!spot.getOccupied()))
                     .collect(Collectors.toList());
 
             List<SpotType> spotTypeAvail = new ArrayList<>();
@@ -63,7 +63,7 @@ public class ReservationServiceImpl implements ReservationService {
                     emptyAvailSpotList.add(s);
                 } else if (s.getSpotType() == SpotType.FOUR_WHEELER && spotTypeAvail.contains(SpotType.FOUR_WHEELER)) {
                     emptyAvailSpotList.add(s);
-                } else if (s.getSpotType() == SpotType.OTHERS && spotTypeAvail.contains(SpotType.FOUR_WHEELER)) {
+                } else if (s.getSpotType() == SpotType.OTHERS && spotTypeAvail.contains(SpotType.OTHERS)) {
                     emptyAvailSpotList.add(s);
                 } else {
                     continue;
