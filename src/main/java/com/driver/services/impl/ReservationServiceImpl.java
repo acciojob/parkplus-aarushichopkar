@@ -32,7 +32,7 @@ public class ReservationServiceImpl implements ReservationService {
         Optional<User> optionalUser = userRepository3.findById(userId);
         Optional<ParkingLot> optionalParkingLot = parkingLotRepository3.findById(parkingLotId);
 
-        if(optionalParkingLot.isPresent() && optionalUser.isPresent()){
+//        if(optionalParkingLot.isPresent() && optionalUser.isPresent()){
 
             //get list of all empty spaces that are same type or more
             List<Spot> spotList = optionalParkingLot.get().getSpotList();
@@ -78,12 +78,12 @@ public class ReservationServiceImpl implements ReservationService {
                 throw new Exception("Cannot make reservation");
             }
 
-        } else if (optionalUser.isEmpty()) {
-            return null;
-        } else if (optionalParkingLot.isEmpty()) {
-            return null;
-        } else{
-            return null;
-        }
+//        } else if (optionalUser.isEmpty()) {
+//            return null;
+//        } else if (optionalParkingLot.isEmpty()) {
+//            return null;
+//        } else{
+//            return null;
+//        }
     }
 }
