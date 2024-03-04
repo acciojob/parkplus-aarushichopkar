@@ -36,6 +36,7 @@ public class ParkingLotController {
     @DeleteMapping("/spot/{spotId}/delete")
     public ResponseEntity<Void> deleteSpot(@PathVariable int spotId) {
         //delete a spot from given parking lot
+        parkingLotService.deleteSpot(spotId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
