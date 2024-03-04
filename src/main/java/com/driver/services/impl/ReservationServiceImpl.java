@@ -78,7 +78,11 @@ public class ReservationServiceImpl implements ReservationService {
                 throw new Exception("Cannot make reservation");
             }
 
-        }else{
+        } else if (optionalUser.isEmpty()) {
+            return null;
+        } else if (optionalParkingLot.isEmpty()) {
+            return null;
+        } else{
             return null;
         }
     }
