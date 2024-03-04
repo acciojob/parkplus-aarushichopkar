@@ -26,6 +26,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void register(String name, String phoneNumber, String password) {
+        //check if user already exist
 
+        //add user
+        User user = new User();
+        user.setName(name);
+        user.setPassword(password);
+        user.setPhoneNumber(phoneNumber);
+        userRepository4.save(user);
     }
 }
