@@ -79,7 +79,7 @@ public class ReservationServiceImpl implements ReservationService {
             }
 
         }else{
-            throw new Exception("asgc");
+            return null;
         }
     }
 }
