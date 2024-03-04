@@ -46,9 +46,6 @@ public class ParkingLotServiceImpl implements ParkingLotService {
         if(optionalParkingLot.isPresent()) {
             ParkingLot parkingLot = optionalParkingLot.get();
             List<Spot> newSpotList = parkingLot.getSpotList();        //get spotlist of the parkinglot
-            if (newSpotList == null) {
-                newSpotList = new ArrayList<>();
-            }
             newSpotList.add(newSpot);                                               //add newSpot to the list
             parkingLot.setSpotList(newSpotList);                      //set this new list
             parkingLotRepository1.save(parkingLot);
@@ -81,7 +78,33 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
     @Override
     public Spot updateSpot(int parkingLotId, int spotId, int pricePerHour) {
+        Optional<Spot> optionalSpot = spotRepository1.findById(spotId);
+        if(optionalSpot.isPresent()){
+            Spot spot = optionalSpot.get();             //spot you want to update
+            spot.setPricePerHour(pricePerHour);
+            ParkingLot spotCurrParkingLot = parkingLotRepository1.findById(spot.getParkingLot().getId()).get();
+            if(spotCurrParkingLot.getId()!=parkingLotId){       //if parkinglot needs to be updated
+                ParkingLot spotNewParkingLot = parkingLotRepository1.findById(parkingLotId).get();
+                spot.setParkingLot(spotNewParkingLot);
 
+//                spotCurrParkingLot.getSpotList().stream().map(Spot::getId).forEach(s -> System.out.println("Curr - Spot ID: " + s));
+//                spotNewParkingLot.getSpotList().stream().map(Spot::getId).forEach(s -> System.out.println("New -Spot ID: " + s));
+
+                List<Spot> spotList = spotCurrParkingLot.getSpotList();     //get spotlist of curr lot
+                spotList.removeIf(s -> s.getId()==spotId);                  //remove spot from this list
+
+                List<Spot> newSpotList = spotNewParkingLot.getSpotList();      //get spotlist of new lot
+                newSpotList.add(spot);                                               //add newSpot to the list
+                spotNewParkingLot.setSpotList(newSpotList);
+
+                parkingLotRepository1.save(spotCurrParkingLot);
+                parkingLotRepository1.save(spotNewParkingLot);
+
+//                spotCurrParkingLot.getSpotList().stream().map(Spot::getId).forEach(s -> System.out.println("Curr - Spot ID: " + s));
+//                spotNewParkingLot.getSpotList().stream().map(Spot::getId).forEach(s -> System.out.println("New - Spot ID: " + s));
+            }
+            return spotRepository1.save(spot);
+        }
         return null;
     }
 
