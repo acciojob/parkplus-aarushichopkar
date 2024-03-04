@@ -1,5 +1,7 @@
 package com.driver.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -13,6 +15,7 @@ public class ParkingLot {
     private String address;
 
     @OneToMany(mappedBy = "parkingLot",cascade = CascadeType.ALL)
+    @JsonManagedReference
     List<Spot> spotList;
 
     public int getId() {
