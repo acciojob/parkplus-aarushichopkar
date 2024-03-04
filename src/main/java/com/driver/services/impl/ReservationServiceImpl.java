@@ -28,16 +28,19 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Reservation reserveSpot(Integer userId, Integer parkingLotId, Integer timeInHours, Integer numberOfWheels) throws Exception {
 
+        User user;
+        ParkingLot parkingLot;
         //check if userId and parkingLotId exist
-        Optional<User> optionalUser = userRepository3.findById(userId);
-        Optional<ParkingLot> optionalParkingLot = parkingLotRepository3.findById(parkingLotId);
+        try{
+            user = userRepository3.findById(userId).get();
+            parkingLot = parkingLotRepository3.findById(parkingLotId).get();
+        } catch (Exception e) {
+            throw new Exception("Cannot make reservation");
+        }
 
-        if(optionalParkingLot.isEmpty() || optionalUser.isEmpty()){
-            return null;
-        }else {
 
             //get list of all empty spaces that are same type or more
-            List<Spot> spotList = optionalParkingLot.get().getSpotList();
+            List<Spot> spotList = parkingLot.getSpotList();
             List<Spot> unoccupiedSpots = spotList.stream()
                     .filter(spot -> Boolean.FALSE.equals(spot.getOccupied()))
                     .collect(Collectors.toList());
@@ -67,25 +70,23 @@ public class ReservationServiceImpl implements ReservationService {
                 }
             }
 
-            Optional<Spot> bestspt = emptyAvailSpotList.stream().min(Comparator.comparingInt(Spot::getPricePerHour));
-            if (bestspt.isPresent()) {
+            Optional<Spot> opbestspt = emptyAvailSpotList.stream().min(Comparator.comparingInt(Spot::getPricePerHour));
+            if (opbestspt.isPresent()) {
+                Spot bestspt = opbestspt.get();;
                 Reservation reservation = new Reservation();
                 reservation.setNumberOfHours(reservation.getNumberOfHours());
-                reservation.setSpot(bestspt.get());
-                reservation.setUser(optionalUser.get());
-                //payment
-                return reservationRepository3.save(reservation);
+                reservation.setSpot(bestspt);
+                reservation.setUser(user);
+                bestspt.setOccupied(true);
+                bestspt.getReservationList().add(reservation);
+                user.getReservationList().add(reservation);
+                userRepository3.save(user);
+                spotRepository3.save(bestspt);
+                return reservation;
             } else {
                 throw new Exception("Cannot make reservation");
             }
 
-//        } else if (optionalUser.isEmpty()) {
-//            return null;
-//        } else if (optionalParkingLot.isEmpty()) {
-//            return null;
-//        } else{
-//            return null;
-//        }
         }
     }
 }
