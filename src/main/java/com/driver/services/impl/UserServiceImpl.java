@@ -16,6 +16,12 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository4;
     @Override
     public void deleteUser(Integer userId) {
+        Optional<User> optionalUser = userRepository4.findById(userId);
+        if(optionalUser.isPresent()){
+            userRepository4.deleteById(userId);
+        }else{
+            throw new NullPointerException("Invalid User Id");
+        }
 
     }
 
