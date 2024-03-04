@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -79,8 +80,16 @@ public class ParkingLotServiceImpl implements ParkingLotService {
     @Override
     public Spot updateSpot(int parkingLotId, int spotId, int pricePerHour){
         Optional<Spot> optionalSpot = spotRepository1.findById(spotId);
-        Spot spot = optionalSpot.get();             //spot you want to update
-        spot.setPricePerHour(pricePerHour);
+        if(optionalSpot.isPresent()){
+            Spot spot = optionalSpot.get();             //spot you want to update
+            spot.setPricePerHour(pricePerHour);
+            return spotRepository1.save(spot);
+        }
+        else {
+            // Handle the case where no Spot with the given spotId is found
+            throw new NoSuchElementException("Spot with ID " + spotId + " not found");
+        }
+
 
             //if parkinglot needs to be updated
 //            ParkingLot spotCurrParkingLot = parkingLotRepository1.findById(spot.getParkingLot().getId()).get();
@@ -106,11 +115,12 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 //            }
 
 
-        return spotRepository1.save(spot);
+
     }
 
     @Override
     public void deleteParkingLot(int parkingLotId) {
+
 
     }
 }
