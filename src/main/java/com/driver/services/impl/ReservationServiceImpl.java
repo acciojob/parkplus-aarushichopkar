@@ -32,7 +32,9 @@ public class ReservationServiceImpl implements ReservationService {
         Optional<User> optionalUser = userRepository3.findById(userId);
         Optional<ParkingLot> optionalParkingLot = parkingLotRepository3.findById(parkingLotId);
 
-//        if(optionalParkingLot.isPresent() && optionalUser.isPresent()){
+        if(optionalParkingLot.isEmpty() || optionalUser.isEmpty()){
+            return null;
+        }else {
 
             //get list of all empty spaces that are same type or more
             List<Spot> spotList = optionalParkingLot.get().getSpotList();
@@ -41,40 +43,39 @@ public class ReservationServiceImpl implements ReservationService {
                     .collect(Collectors.toList());
 
             List<SpotType> spotTypeAvail = new ArrayList<>();
-            if(numberOfWheels<=2) {
+            if (numberOfWheels <= 2) {
                 spotTypeAvail.add(SpotType.TWO_WHEELER);
                 spotTypeAvail.add(SpotType.FOUR_WHEELER);
                 spotTypeAvail.add(SpotType.OTHERS);
-            } else if (numberOfWheels<=4) {
+            } else if (numberOfWheels <= 4) {
                 spotTypeAvail.add(SpotType.FOUR_WHEELER);
                 spotTypeAvail.add(SpotType.OTHERS);
-            }else {
+            } else {
                 spotTypeAvail.add(SpotType.OTHERS);
             }
 
             List<Spot> emptyAvailSpotList = new ArrayList<>();
-            for(Spot s: unoccupiedSpots){
-                if(s.getSpotType()==SpotType.TWO_WHEELER && spotTypeAvail.contains(SpotType.TWO_WHEELER)){
+            for (Spot s : unoccupiedSpots) {
+                if (s.getSpotType() == SpotType.TWO_WHEELER && spotTypeAvail.contains(SpotType.TWO_WHEELER)) {
                     emptyAvailSpotList.add(s);
-                } else if (s.getSpotType()==SpotType.FOUR_WHEELER && spotTypeAvail.contains(SpotType.FOUR_WHEELER)) {
+                } else if (s.getSpotType() == SpotType.FOUR_WHEELER && spotTypeAvail.contains(SpotType.FOUR_WHEELER)) {
                     emptyAvailSpotList.add(s);
-                } else if (s.getSpotType()==SpotType.OTHERS && spotTypeAvail.contains(SpotType.FOUR_WHEELER)) {
+                } else if (s.getSpotType() == SpotType.OTHERS && spotTypeAvail.contains(SpotType.FOUR_WHEELER)) {
                     emptyAvailSpotList.add(s);
-                }else {
+                } else {
                     continue;
                 }
             }
 
             Optional<Spot> bestspt = emptyAvailSpotList.stream().min(Comparator.comparingInt(Spot::getPricePerHour));
-            if(bestspt.isPresent()){
+            if (bestspt.isPresent()) {
                 Reservation reservation = new Reservation();
                 reservation.setNumberOfHours(reservation.getNumberOfHours());
                 reservation.setSpot(bestspt.get());
                 reservation.setUser(optionalUser.get());
                 //payment
                 return reservationRepository3.save(reservation);
-            }
-            else {
+            } else {
                 throw new Exception("Cannot make reservation");
             }
 
@@ -85,5 +86,6 @@ public class ReservationServiceImpl implements ReservationService {
 //        } else{
 //            return null;
 //        }
+        }
     }
 }
