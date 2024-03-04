@@ -15,7 +15,7 @@ public class ParkingLot {
     private String address;
 
     @OneToMany(mappedBy = "parkingLot",cascade = CascadeType.ALL)
-    @JsonManagedReference
+//    @JsonManagedReference
     List<Spot> spotList;
 
     public int getId() {

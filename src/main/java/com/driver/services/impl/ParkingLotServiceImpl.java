@@ -55,9 +55,7 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 //                .map(Spot::getId)
 //                .forEach(spotId -> System.out.println("Spot ID: " + spotId));
 
-        Spot savedSpot = spotRepository1.save(newSpot);
-//        System.out.println(savedSpot);
-        return savedSpot;
+        return spotRepository1.save(newSpot);
     }
 
     @Override
