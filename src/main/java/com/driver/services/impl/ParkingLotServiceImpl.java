@@ -59,7 +59,9 @@ public class ParkingLotServiceImpl implements ParkingLotService {
         else
             throw new NullPointerException();
 
-        return spotRepository1.save(newSpot);
+        Spot s = spotRepository1.save(newSpot);
+        System.out.println(s);
+        return s;
     }
 
     @Override
